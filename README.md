@@ -1,6 +1,6 @@
-# 🧠 CortexAI — The Ultimate Microservice AI Agent Playground! 🚀🤖
+# 🧠 SyncAgents — The Ultimate Microservice AI Agent Playground! 🚀🤖
 
-Welcome to **CortexAI**! 🌟 This is a state-of-the-art, supercharged microservice platform engineered to host multiple AI agents with live coding previews, PPT/PDF generation, vision analysis, and vector search capabilities. It's modular, lightning-fast, and powered by modern tools. 😎🔥
+Welcome to **SyncAgents**! 🌟 This is a state-of-the-art, supercharged microservice platform engineered to host multiple AI agents with live coding previews, PPT/PDF generation, vision analysis, and vector search capabilities. It's modular, lightning-fast, and powered by modern tools. 😎🔥
 
 ---
 
