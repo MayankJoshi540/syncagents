@@ -1,6 +1,6 @@
-# CortexAI Project Context
+# SyncAgents Project Context
 
-CortexAI is a microservice-based AI agent platform that provides users with multiple AI capabilities: Conversational Chat, HTML/CSS/JS Coding & Live Previews (Artifacts), PDF Document Generation, PPT Slides Generation, Image Generation, Web Search, Vision Analysis, and PDF RAG (vector database similarity search).
+SyncAgents is a microservice-based AI agent platform that provides users with multiple AI capabilities: Conversational Chat, HTML/CSS/JS Coding & Live Previews (Artifacts), PDF Document Generation, PPT Slides Generation, Image Generation, Web Search, Vision Analysis, and PDF RAG (vector database similarity search).
 
 ---
 

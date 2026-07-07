@@ -32,9 +32,9 @@ setSelectedFile
 
    const placeholders={
 
-auto:"Ask CortexAI...",
+auto:"Ask SyncAgents...",
 
-chat:"Chat with CortexAI...",
+chat:"Chat with SyncAgents...",
 
 coding:"Describe the software you want...",
 
@@ -553,7 +553,7 @@ isListening
       </div>
 
       <p className="text-center text-[10.5px] text-slate-700 mt-2.5">
-        CortexAI can make mistakes. Verify important info.
+        SyncAgents can make mistakes. Verify important info.
       </p>
     </div>
   );
