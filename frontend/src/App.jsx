@@ -1,18 +1,15 @@
-import React from 'react';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from './pages/Home';
-import useCurrentUser from './hooks/useCurrentUser';
+import React from 'react'
+import { auth, googleProvider } from '../utils/firebase'
+import { signInWithPopup } from 'firebase/auth'
+import api from '../utils/axios'
+import Home from './pages/Home'
 
-function App() {
-  useCurrentUser();
- 
+const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Home/>}/>
-      </Routes>
-    </BrowserRouter>
-  );
+    <>
+    <Home/>
+    </>
+  )
 }
 
-export default App;
+export default App
