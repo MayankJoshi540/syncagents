@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import proxy from "express-http-proxy";
 import cors from "cors"
 import cookieParser from "cookie-parser";
+import getCurrentUser from "./controller/user.controller.js";
+import authMiddleware from "./middleware/auth.middleware.js";
 dotenv.config();
 
 const port = process.env.PORT;
@@ -13,7 +15,7 @@ app.use(cors({
     credentials : true
 }))
 app.use(cookieParser())
-app.use("/auth", proxy(process.env.AUTH_SERVICE_URL, {
+app.use("/api/auth", proxy(process.env.AUTH_SERVICE_URL, {
     proxyErrorHandler: function(err, res, next) {
         console.error("Gateway Auth Proxy Error:", err.message || err);
         return res.status(500).json({ 
@@ -22,6 +24,7 @@ app.use("/auth", proxy(process.env.AUTH_SERVICE_URL, {
         });
     }
 }))
+app.get("/api/me",authMiddleware,getCurrentUser);
 
 app.get("/",(req,res)=>{
     res.json({message : "hello from gateway"});

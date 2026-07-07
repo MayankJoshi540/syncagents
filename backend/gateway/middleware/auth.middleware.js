@@ -2,7 +2,7 @@ import redisClient from "../../shared/redis/redis.js"
 
 const authMiddleware = async(req,res,next)=>{
     try{
-       const sessionId = req.cookies?.session_id
+       const sessionId = req.cookies?.session || req.cookies?.session_id
        if(!sessionId){
         return res.status(401).json({message:"unauthorised"})
        }
