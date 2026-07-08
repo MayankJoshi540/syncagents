@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import Home from './pages/Home'
 import getCurrentUser from './features/getCurrentUser'
-import { setUserData } from './redux/user.slice'
+import { setUserData } from './redux/userSlice'
 
 const App = () => {
   const dispatch = useDispatch()
