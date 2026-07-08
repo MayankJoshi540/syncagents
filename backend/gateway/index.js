@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import rrentUser from "./controller/user.controller.js";
 import authMiddleware from "./middleware/auth.middleware.js";
 import getCurrentUser from "./controller/user.controller.js";
+import { proxyWithUser } from "./utils/proxyWithHeaders.js";
 dotenv.config();
 
 const port = process.env.PORT;
@@ -26,6 +27,7 @@ app.use("/api/auth", proxy(process.env.AUTH_SERVICE_URL, {
     }
 }))
 app.get("/api/me",authMiddleware,getCurrentUser);
+app.use("/api/chat",proxyWithUser(process.env.CHAT_SERVICE))   
 
 app.get("/",(req,res)=>{
     res.json({message : "hello from gateway"});
