@@ -25,6 +25,7 @@ app.use("/api/auth", proxy(process.env.AUTH_SERVICE_URL, {
         });
     }
 }))
+
 app.get("/api/me",protect,getCurrentUser);
 app.use("/api/chat",protect,proxyWithUser(process.env.CHAT_SERVICE))  
 app.use("/api/agent",protect,proxy(process.env.AGENT_SERVICE_URL));

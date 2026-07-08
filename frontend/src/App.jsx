@@ -1,26 +1,17 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import {BrowserRouter, Route, Routes} from "react-router-dom"
 import Home from './pages/Home'
-import getCurrentUser from './features/getCurrentUser'
-import { setUserData } from './redux/user.slice'
-
-const App = () => {
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    const getUser = async () => {
-      const response = await getCurrentUser()
-      if (response) {
-        dispatch(setUserData(response))
-      }
-    }
-    getUser()
-  }, [dispatch])
-
+import useCurrentUser from './hooks/useCurrentUser'
+function App() {
+  useCurrentUser()
+ 
   return (
-    <>
-      <Home />
-    </>
+   <BrowserRouter>
+   <Routes>
+    <Route path='/' element={<Home/>}/>
+   </Routes>
+   
+   </BrowserRouter>
   )
 }
 
