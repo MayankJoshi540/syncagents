@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import Home from './pages/Home'
 import getCurrentUser from './features/getCurrentUser'
-import { setUserData } from './redux/userSlice'
+import { setUserData } from './redux/user.slice'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -10,8 +10,8 @@ const App = () => {
   useEffect(() => {
     const getUser = async () => {
       const response = await getCurrentUser()
-      if (response && response.data) {
-        dispatch(setUserData(response.data))
+      if (response) {
+        dispatch(setUserData(response))
       }
     }
     getUser()
