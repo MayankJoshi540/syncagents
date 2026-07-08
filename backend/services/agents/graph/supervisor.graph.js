@@ -178,5 +178,4 @@ workflow.addEdge(
     "__end__"
 );
 
-export const graph =
-workflow.compile();
+export const graph = workflow.compile();
