@@ -1,6 +1,6 @@
 # 🧠 SyncAgents — The Ultimate Microservice AI Agent Playground! 🚀🤖
 
-Welcome to **SyncAgents**! 🌟 This is a state-of-the-art, supercharged microservice platform engineered to host multiple AI agents with live coding previews, PPT/PDF generation, vision analysis, and vector search capabilities. It's modular, lightning-fast, and powered by modern tools. 😎🔥
+Welcome to **SyncAgents**! 🌟 This is a state-of-the-art, supercharged microservice platform engineered to host multiple AI agents with live coding previews, PPT/PDF generation, vision analysis, payment processing, and vector search capabilities. It is modular, lightning-fast, and powered by cutting-edge tools.
 
 ---
 
@@ -11,64 +11,84 @@ graph TD
     Client[React Frontend - Port 5173] -->|API Requests| Gateway[Gateway - Port 8000]
     Gateway -->|Session Storage| Redis[(Redis Session Store)]
     
-    Gateway -->|/auth| AuthSvc[Auth Service - Port 8001]
+    Gateway -->|/api/auth| AuthSvc[Auth Service - Port 8001]
+    Gateway -->|/api/chat| ChatSvc[Chat Service - Port 8002]
+    Gateway -->|/api/agent| AgentSvc[Agent Service - Port 8003]
+    Gateway -->|/api/billing| BillingSvc[Billing Service - Port 8004]
     
     AuthSvc --> MongoDB[(MongoDB Atlas)]
     AuthSvc --> Firebase[Firebase Auth Admin]
+    ChatSvc --> MongoDB
+    AgentSvc --> MongoDB
+    AgentSvc --> Tavily[Tavily Search API]
+    AgentSvc --> Qdrant[(Qdrant Vector DB)]
+    BillingSvc --> Razorpay[Razorpay Payments]
+    BillingSvc --> MongoDB
 ```
 
 ---
 
 ## 🛠️ The Powerhouse Tech Stack ⚡🔋
 
-Here are the technologies powering this beast:
+Here are the technologies powering the SyncAgents ecosystem:
 
 ### 🌐 Frontend (The Face)
-![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
-![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-%23039BE5.svg?style=for-the-badge&logo=firebase)
+* **React 19:** Building smooth, interactive, and declarative UI components. ⚛️
+* **Vite:** High-performance tooling with instant Hot Module Replacement (HMR). ⚡
+* **Tailwind CSS v4:** Next-generation styling utility for modern, custom designs. 🎨
+* **Monaco Editor (`@monaco-editor/react`):** Embedded developer editor in the browser for live code editing and agent previews. 💻
+* **Framer Motion:** High-fidelity fluid micro-animations and page transitions. 🎬
+* **Redux Toolkit (`@reduxjs/toolkit`):** Centralized global state management for chats, agents, and transactions. 📦
+* **Firebase SDK:** Client-side authentication and session handlers. 🔑
+* **React Router Dom v7:** Flexible routing architecture for SPA navigation. 🗺️
 
-* **React 19:** Building smooth, interactive, declarative components. ⚛️
-* **Vite:** Instantly fast builds and Hot Module Replacement (HMR). ⚡
-* **Tailwind CSS v4:** Sleek, modern styling system for rich custom designs. 🎨
-* **Firebase SDK:** User authentication and sign-in handlers. 🔑
-
----
-
-### ⚙️ Backend & API Gateway (The Brains)
-![Node.js](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-![Nodemon](https://img.shields.io/badge/nodemon-76DEC2?style=for-the-badge&logo=nodemon&logoColor=white)
-
-* **API Gateway:** Proxies and channels requests to sub-services on different ports. 🚥
-* **Auth Service:** Dedicated microservice checking Firebase session tokens and talking to MongoDB. 🛡️
-* **Shared Redis Modules:** Custom fast memory layers using `ioredis`. 💾
-
----
+### ⚙️ Backend & Microservices (The Brains)
+* **Node.js & Express.js:** Scalable async server runtime with ES Module support. 🟢
+* **API Gateway:** Central entry point proxying requests using `express-http-proxy`, secured with `helmet` and logged with `morgan`. 🚥
+* **Agent Service (Port 8003):** Multi-agent orchestrator utilizing:
+  * **LangChain & LangGraph:** Orchestrates complex, stateful RAG and agent workflows. 🕸️
+  * **DeepSeek, Google Gen AI (Gemini), & Groq:** Multi-model support for advanced reasoning, chat, and vision tasks. 🤖
+  * **PDF & PowerPoint Generation:** Programmatically compiles documents using `pdfkit`, `pdf-parse`, and `pptxgenjs`. 📄📊
+* **Auth Service (Port 8001):** Secure Firebase token validation and user identity management. 🛡️
+* **Chat Service (Port 8002):** Manages agent conversations, message threads, and real-time interactions. 💬
+* **Billing Service (Port 8004):** Handles user subscriptions, plans, and payments integrated with **Razorpay**. 💳
+* **Shared Redis Modules:** A shared cache and session store powered by `ioredis` and shared local classes. 💾
 
 ### 🗄️ Databases & Infrastructure (The Memory)
-![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
-![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
-![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-
-* **MongoDB Atlas:** Cloud database storing permanent user profiles and agent memory. 🍃
-* **Redis:** In-memory store utilized for gateway caching and high-speed session tracking. ⚡
+* **MongoDB Atlas:** NoSQL cloud database storing user metadata, billing records, and agent memories. 🍃
+* **Redis:** High-speed in-memory caching for session management and rate limiting. ⚡
 * **Docker:** Containerized setup for running the local Redis container seamlessly. 🐳
+
+---
+
+## ✨ New & Advanced Features
+
+* **Multi-Service Single Runner:** Start the entire project (all backend services + frontend) in one command using the new root scripts ([run-all.js](file:///C:/syncagents%20AI/run-all.js), [run-all.bat](file:///C:/syncagents%20AI/run-all.bat), or [run-all.ps1](file:///C:/syncagents%20AI/run-all.ps1)).
+* **Monaco Editor Playground:** Edit code and scripts in real-time inside the browser client and test agent responses instantly.
+* **Autonomous Document Generation:** AI agents can automatically draft PPT presentation slides and PDF files based on your prompts.
+* **Unified API Routing:** All sub-services are reverse-proxied through the gateway on port `8000`, securing CORS headers, cookies, and authentication.
+* **Razorpay Payment Gateway:** Fully functioning subscription plans with secure signature verification.
 
 ---
 
 ## 📂 Codebase Directory Layout 🗂️
 
 ```text
-syncagents-ai/
+syncagents/
 ├── backend/
 │   ├── gateway/                  # 🚦 API Gateway (Port 8000)
-│   ├── shared/                   # 🤝 Shared libraries & Redis client wrapper
-│   ├── services/
-│   │   ├── auth/                 # 🔐 Auth Service (Port 8001)
-│   └── docker-compose.yml        # 🐳 Container orchestration for Redis
-└── frontend/                     # 🎨 React + Vite UI client SPA (Port 5173)
+│   ├── shared/                   # 🤝 Shared libraries (Redis client, DB connections)
+│   └── services/
+│       ├── agent/                # 🤖 Agent Service (Port 8003) - LangChain & Docs
+│       ├── auth/                 # 🔐 Auth Service (Port 8001) - User Sessions
+│       ├── billing/              # 💳 Billing Service (Port 8004) - Razorpay Payments
+│       └── chat/                 # 💬 Chat Service (Port 8002) - Conversation Store
+│   ├── docker-compose.yml        # 🐳 Container orchestration for Redis
+│   └── package.json              # 📦 Shared backend packages (dotenv, ioredis)
+├── frontend/                     # 🎨 React 19 + Tailwind v4 + Monaco Editor SPA
+├── run-all.js                    # ⚡ Unified cross-platform Node.js runner script
+├── run-all.bat                   # ⚡ Windows batch runner script
+└── run-all.ps1                   # ⚡ Windows PowerShell runner script
 ```
 
 ---
@@ -86,8 +106,11 @@ VITE_SERVER_URL=http://localhost:8000
 ### 2️⃣ Gateway (`backend/gateway/.env`)
 ```env
 PORT=8000
-AUTH_SERVICE_URL=http://localhost:8001
-FRONTEND_URL=http://localhost:5173
+REDIS_URL="redis://localhost:6379"
+AUTH_SERVICE="http://localhost:8001"
+CHAT_SERVICE="http://localhost:8002"
+AGENT_SERVICE="http://localhost:8003"
+BILLING_SERVICE="http://localhost:8004"
 ```
 
 ### 3️⃣ Auth Service (`backend/services/auth/.env`)
@@ -98,45 +121,56 @@ MONGODB_URL=your_mongodb_connection_string
 > [!IMPORTANT]
 > Make sure to drop your Firebase Admin Private Key JSON file at `backend/services/auth/serviceAccountKey.json`. 🔑
 
+### 4️⃣ Agent Service (`backend/services/agent/.env`)
+```env
+PORT=8003
+MONGODB_URL=your_mongodb_connection_string
+REDIS_URL="redis://localhost:6379"
+GEMINI_API_KEY=your_gemini_api_key
+DEEPSEEK_API_KEY=your_deepseek_api_key
+TAVILY_API_KEY=your_tavily_search_api_key
+```
+
+### 5️⃣ Billing Service (`backend/services/billing/.env`)
+```env
+PORT=8004
+MONGODB_URL=your_mongodb_connection_string
+RAZORPAY_KEY_ID=your_razorpay_key_id
+RAZORPAY_KEY_SECRET=your_razorpay_key_secret
+```
+
 ---
 
-## 🚀 Speedrun: Local Launch Guide 🏃‍♂️💨
+## 🚀 Local Launch Guide 🏃‍♂️💨
 
-### 🐳 Step 1: Fire Up Redis
-Start the Redis docker container in detached mode:
+### 🐳 Step 1: Start Redis
+Launch the local Redis container in detached mode:
 ```bash
 cd backend
 docker compose up -d
 ```
 
-### 🤝 Step 2: Set Up Shared Modules
-Install dependencies for the shared Redis helpers:
+### 🤝 Step 2: Install Base Shared Modules
+Install root backend dependencies to support the shared folder context:
 ```bash
-cd backend/shared
+cd backend
 npm install
 ```
 
-### 🚦 Step 3: Start the Backend Engines
-Open new terminals and run:
+### ⚡ Step 3: Run Everything Instantly
+From the root folder, launch the entire application concurrently using your preferred terminal:
 
-* **Gateway:**
-  ```bash
-  cd backend/gateway
-  npm install
-  npm run dev
-  ```
-* **Auth Service:**
-  ```bash
-  cd backend/services/auth
-  npm install
-  npm run dev
-  ```
+*   **Option A: Unified Terminal Logs (Highly Recommended)**
+    ```bash
+    node run-all.js
+    ```
+*   **Option B: Separate Command Prompt Windows**
+    ```cmd
+    .\run-all.bat
+    ```
+*   **Option C: PowerShell Separate Windows**
+    ```powershell
+    .\run-all.ps1
+    ```
 
-### 🎨 Step 4: Run the UI App
-In a final terminal window, spin up the React dev server:
-```bash
-cd frontend
-npm install
-npm run dev
-```
-Open up your browser to **[http://localhost:5173](http://localhost:5173)** and start exploring! 🚀🌌
+Once started, open your browser to **[http://localhost:5173](http://localhost:5173)** and start exploring! 🚀🌌
