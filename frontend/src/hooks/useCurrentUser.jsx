@@ -10,7 +10,7 @@ useEffect(()=>{
 const get=async ()=>{
     try {
         const {data}=await api.get("/api/me")
-       dispatch(setUserData(data))
+       dispatch(setUserData(data.user))
     } catch (error) {
         console.log(error)
     }

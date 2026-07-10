@@ -27,7 +27,7 @@ export default function BillingDrawer({
 
             currency: data.order.currency,
 
-            name: "SyncAgents",
+            name: "CortexAI",
 
             description: `${data.plan.name} Plan`,
 

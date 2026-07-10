@@ -103,48 +103,47 @@ useEffect(() => {
 
 }, [messages.length, isLoading]);
   useEffect(() => {
-    if (!selectedConversation || selectedConversation.title === "New Chat") return;
+    if (!selectedConversation || !selectedConversation._id) return;
+    if (selectedConversation.title === "New Chat") return;
     const get = async () => {
-      try {
-        const data = await getMessages(selectedConversation?._id);
-        dispatch(setMessages(data));
-        const latestArtifactMessage =
-          [...data]
-            .reverse()
-            .find(
-              msg =>
-                msg.artifacts &&
-                msg.artifacts.length > 0
-            );
+      const data = await getMessages(selectedConversation._id);
+      dispatch(setMessages(data));
+      const latestArtifactMessage =
+  [...data]
+    .reverse()
+    .find(
+      msg =>
+        msg.artifacts &&
+        msg.artifacts.length > 0
+    );
 
-        if (latestArtifactMessage) {
-          dispatch(
-            setArtifacts(
-              latestArtifactMessage.artifacts
-            )
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching messages:", error);
-      }
+if (latestArtifactMessage) {
+
+  dispatch(
+    setArtifacts(
+      latestArtifactMessage.artifacts
+    )
+  );
+
+}
     };
     get();
   }, [selectedConversation?._id]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex-1 overflow-y-auto px-6 py-6 space-y-5 no-scrollbar bg-[#06070a]">
       {messages.length === 0 && !isLoading ? (
-        <div className="h-full flex flex-col items-center justify-center gap-4 text-center">
+        <div className="h-full flex flex-col items-center justify-end pb-12 gap-5 text-center select-none">
           <div className="flex flex-col gap-1.5">
-            <h1 className="text-[20px] font-semibold text-slate-200 tracking-tight">SyncAgents</h1>
-            <h3 className="text-[15px] font-semibold text-slate-400 tracking-tight">How can I help you?</h3>
-            <p className="text-[13px] text-slate-600 max-w-[260px] leading-relaxed">Ask me anything — code, ideas, explanations, or just a quick question.</p>
+            <h1 className="text-[22px] font-bold text-slate-100 tracking-tight">SyncAgents</h1>
+            <h3 className="text-[14px] font-semibold text-slate-400 tracking-tight">How can I help you?</h3>
+            <p className="text-[13px] text-slate-500 max-w-[280px] leading-relaxed">Ask me anything — code, ideas, explanations, or just a quick question.</p>
           </div>
-          <div className="flex flex-wrap justify-center gap-2 mt-1">
+          <div className="flex flex-wrap justify-center gap-2 mt-2">
             {["Write a Netflix clone", "Explain Redis", "Build a dashboard"].map((s) => (
               <button
                 key={s}
-                className="text-[12px] text-slate-400 bg-white/[0.04] border border-white/[0.07] px-3.5 py-1.5 rounded-lg hover:bg-white/[0.08] hover:text-slate-200 transition-colors duration-150 cursor-pointer"
+                className="text-[12px] text-slate-400 bg-white/[0.02] border border-white/5 px-3.5 py-1.5 rounded-lg hover:bg-white/[0.05] hover:border-white/10 hover:text-slate-200 transition-all duration-200 cursor-pointer"
               >
                 {s}
               </button>

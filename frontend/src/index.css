@@ -1,47 +1,69 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-green: #10a37f;
-  --color-brand-dark: #212121;
-  --color-brand-sidebar: #171717;
-  --color-brand-input: #2f2f2f;
-  --color-card-border: rgba(255, 255, 255, 0.08);
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --color-cyber-void: #06070a;
+  --color-cyber-chamber: #0d1017;
+  --color-cyber-panel: #131722;
+  --color-cyber-accent: #6366f1;
+  --color-cyber-glow: #06b6d4;
+  --color-cyber-border: rgba(255, 255, 255, 0.05);
 }
 
-/* Custom Scrollbar Styles (Slim & Muted) */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.18);
+body {
+  background-color: #06070a;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: #f8fafc;
+  overflow-x: hidden;
 }
 
-/* Soft card styling matching ChatGPT */
-.chatgpt-card {
-  background: #2f2f2f;
+/* Custom Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Cyber glows and animations */
+.cyber-glow-btn {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cyber-glow-btn:hover:not(:disabled) {
+  border-color: rgba(6, 182, 212, 0.4) !important;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+  transform: translateY(-1px);
+}
+
+.cyber-accent-btn {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.cyber-accent-btn:hover:not(:disabled) {
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Pulse animation for active mic */
+@keyframes cyber-pulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0.8);
+    opacity: 0.85;
+  }
+}
+.mic-active-pulse {
+  animation: cyber-pulse 1.6s infinite ease-in-out;
+}
+
+/* Glassmorphism panel base */
+.glass-panel {
+  background: rgba(13, 16, 23, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.chatgpt-btn-green {
-  background-color: #10a37f;
-  color: white;
-}
-.chatgpt-btn-green:hover {
-  background-color: #1a7f64;
-}
-
-/* Responsive constraints for chat view */
-.chat-container-max {
-  max-width: 48rem; /* 768px matching ChatGPT center column */
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
 }

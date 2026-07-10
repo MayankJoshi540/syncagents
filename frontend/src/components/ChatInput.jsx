@@ -187,9 +187,11 @@ const toggleMic = () => {
         conversation = newConversation;
       }
 
-      if (conversation.title === "New Chat") {
-        await updateConversations(conversation._id, prompt.slice(0, 40));
-        dispatch(setConvTitle({ conversationId: conversation._id, title: prompt.slice(0, 40) }));
+      const isGreeting = /^(hi|hello|hey|yo|test|hola|sup|greetings)\s*$/i.test(prompt);
+      if (conversation.title === "New Chat" && !isGreeting) {
+        const titleText = prompt.length > 30 ? prompt.slice(0, 30) + "..." : prompt;
+        await updateConversations(conversation._id, titleText);
+        dispatch(setConvTitle({ conversationId: conversation._id, title: titleText }));
       }
 
       dispatch(addMessage({ role: "user", content: prompt }));
@@ -260,306 +262,184 @@ catch(error){
 
 }
   finally {
-       dispatch(setIsLoading(false));
-    }
-  };
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
+    dispatch(setIsLoading(false));
+  }
+};
+
+const handleKeyDown = (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    handleSend();
+  }
+};
 
   return (
-   <div className="w-full overflow-hidden px-3 md:px-5 py-4 border-t border-white/[0.06] bg-[#0d0f14]">
-      <div className="flex flex-col gap-2 bg-white/[0.03] border border-white/[0.07] rounded-2xl px-4 pt-3.5 pb-3">
-
-
-    <div className="flex w-[80%] gap-2 pr-2 flex-wrap">
-
-    {agents.map((agent) => {
-
-      const Icon = agent.icon;
-      const isActive = selectedAgent === agent.id;
-
-      return (
-
-        <button
-          key={agent.id}
-          onClick={() => setSelectedAgent(agent.id)}
-          className={`
-            flex-shrink-0
-            
-            inline-flex
-            items-center
-            gap-1.5
-            px-3
-            py-2
-            rounded-full
-            text-xs
-            font-medium
-            border
-            transition-all
-
-            ${
-              isActive
-                ? "bg-gradient-to-r from-indigo-500 to-violet-600 text-white border-transparent shadow-[0_1px_8px_rgba(99,102,241,.35)]"
-                : "bg-white/[0.03] text-slate-400 border-white/[0.06] hover:bg-white/[0.07]"
-            }
-          `}
-        >
-
-          <Icon
-            size={14}
-            className={
-              isActive
-                ? "text-white"
-                : "text-slate-500"
-            }
-          />
-
-          {agent.label}
-
-        </button>
-
-      );
-
-    })}
-
-
-</div>
-
-{
-
-selectedFile && (
-
-<div className="my-3">
-
-<div className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2">
-
-{
-
-selectedFile.type==="application/pdf"
-
-?
-
-<FileText
-
-size={16}
-
-className="text-red-400"
-
-/>
-
-:
-
-
-
-selectedFile?.type.startsWith("image/")
-
-&&
-
-<img
-
-src={URL.createObjectURL(selectedFile)}
-
-className="h-10 w-10 rounded-xl object-cover mt-3"
-
-/>
-
-
-
-}
-
-<div>
-
-<p className="text-xs text-white">
-
-{
-
-selectedFile.name
-
-}
-
-</p>
-
-<p className="text-[10px] text-slate-500">
-
-{
-
-Math.ceil(
-
-selectedFile.size/
-
-1024
-
-)
-
-}
-
-KB
-
-</p>
-
-</div>
-
-<button
-
-onClick={()=>{
-
-setSelectedFile(null);
-
-fileRef.current.value="";
-
-}}
-
-className="ml-2"
-
->
-
-<X
-
-size={14}
-
-className="text-slate-500 hover:text-white"
-
-/>
-
-</button>
-
-</div>
-
-</div>
-
-)
-}
-
+    <div className="w-full overflow-hidden px-3 md:px-5 py-4 border-t border-white/5 bg-[#06070a]">
+      <div className="flex flex-col gap-2 bg-[#0d1017] border border-white/5 shadow-[0_4px_30px_rgba(0,0,0,0.35)] rounded-2xl px-4 pt-3.5 pb-3 focus-within:border-cyan-500/20 focus-within:shadow-[0_0_20px_rgba(6,182,212,0.08)] transition-all duration-300">
+
+        <div className="flex flex-wrap gap-1 p-1 bg-black/20 border border-white/5 rounded-xl max-w-full w-fit">
+          {agents.map((agent) => {
+            const Icon = agent.icon;
+            const isActive = selectedAgent === agent.id;
+
+            return (
+              <button
+                key={agent.id}
+                onClick={() => setSelectedAgent(agent.id)}
+                className={`
+                  flex-shrink-0
+                  inline-flex
+                  items-center
+                  gap-1.5
+                  px-3
+                  py-1.5
+                  rounded-lg
+                  text-xs
+                  font-semibold
+                  transition-all
+                  duration-200
+                  cursor-pointer
+                  focus-visible:ring-1
+                  focus-visible:ring-cyber-glow
+                  focus-visible:outline-none
+                  ${
+                    isActive
+                      ? "bg-cyber-accent/20 text-indigo-300 shadow-[0_0_12px_rgba(99,102,241,0.12)]"
+                      : "bg-transparent text-slate-500 hover:text-slate-300"
+                  }
+                `}
+              >
+                <Icon
+                  size={12}
+                  className={isActive ? "text-indigo-400" : "text-slate-500"}
+                />
+                {agent.label}
+              </button>
+            );
+          })}
+        </div>
+
+        {selectedFile && (
+          <div className="my-2.5">
+            <div className="inline-flex items-center gap-2.5 rounded-xl border border-white/5 bg-white/[0.02] p-2 pr-3">
+              {selectedFile.type === "application/pdf" ? (
+                <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/20 flex items-center justify-center">
+                  <FileText size={15} className="text-red-400" />
+                </div>
+              ) : (
+                selectedFile?.type.startsWith("image/") && (
+                  <img
+                    src={URL.createObjectURL(selectedFile)}
+                    className="h-8 w-8 rounded-lg object-cover border border-white/10"
+                  />
+                )
+              )}
+
+              <div className="max-w-[200px]">
+                <p className="text-[11.5px] font-semibold text-slate-200 truncate">
+                  {selectedFile.name}
+                </p>
+                <p className="text-[9.5px] font-medium text-slate-500 mt-0.5">
+                  {Math.ceil(selectedFile.size / 1024)} KB
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  setSelectedFile(null);
+                  fileRef.current.value = "";
+                }}
+                className="ml-1 bg-white/[0.04] border border-white/5 hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-400 rounded-md p-1 cursor-pointer transition-all duration-150 focus-visible:ring-1 focus-visible:ring-red-500 focus-visible:outline-none"
+              >
+                <X size={11} className="text-slate-500 group-hover:text-inherit" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Textarea */}
         <textarea
           value={value}
           onChange={e => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder={
-placeholders[selectedAgent]
-}
+          placeholder={placeholders[selectedAgent]}
           rows={3}
           disabled={isLoading}
-          className="w-full bg-transparent outline-none resize-none text-[14px] text-slate-200 placeholder:text-slate-600 leading-relaxed [scrollbar-width:none] [&::-webkit-scrollbar]:hidden disabled:opacity-50"
+          className="w-full bg-transparent outline-none resize-none text-[13.5px] font-medium text-slate-200 placeholder:text-slate-400 leading-relaxed no-scrollbar disabled:opacity-50 mt-1.5 focus:ring-0"
         />
 
         {/* Bottom row */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mt-1 pt-1.5 border-t border-white/[0.03]">
 
           {/* Left — attach + mic */}
           <div className="flex items-center gap-1">
-  <input
-
-ref={fileRef}
-
-type="file"
-
-hidden
-
-accept=".pdf,image/*"
-
-onChange={(e)=>{
-
-const file =
-e.target.files[0];
-
-if(file){
-
-setSelectedFile(file);
-
-}
-
-}}
-
-/>
-            <button className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 hover:text-slate-400 hover:bg-white/[0.05] border border-transparent hover:border-white/[0.06] transition-all duration-150 bg-transparent cursor-pointer"
-            onClick={()=>
-fileRef.current.click()
-}
+            <input
+              ref={fileRef}
+              type="file"
+              hidden
+              accept=".pdf,image/*"
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  setSelectedFile(file);
+                }
+              }}
+            />
+            <button 
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-slate-500 hover:text-slate-300 hover:bg-white/[0.04] border border-transparent hover:border-white/5 transition-all duration-150 bg-transparent cursor-pointer focus-visible:ring-1 focus-visible:ring-cyber-glow focus-visible:outline-none"
+              onClick={() => fileRef.current.click()}
+              title="Attach File (PDF/Image)"
             >
               <Paperclip size={14} />
             </button>
-           <button
-
-onClick={toggleMic}
-
-className={`
-
-flex
-
-items-center
-
-justify-center
-
-w-8
-
-h-8
-
-rounded-lg
-
-transition-all
-
-cursor-pointer
-
-${
-
-isListening
-
-?
-
-"bg-red-500 text-white"
-
-:
-
-"text-slate-600 hover:bg-white/[0.05]"
-
-}
-
-`}
-
->
-
-{
-
-isListening
-
-?
-
-<MicOff size={14}/>
-
-:
-
-<Mic size={14}/>
-
-}
-
-</button>
+            <button
+              onClick={toggleMic}
+              className={`
+                flex
+                items-center
+                justify-center
+                w-8
+                h-8
+                rounded-lg
+                border
+                transition-all
+                duration-200
+                cursor-pointer
+                focus-visible:ring-1
+                focus-visible:ring-cyber-glow
+                focus-visible:outline-none
+                ${
+                  isListening
+                    ? "bg-red-500/10 border-red-500/30 text-red-400 mic-active-pulse"
+                    : "bg-transparent text-slate-500 border-transparent hover:bg-white/[0.04] hover:text-slate-300 hover:border-white/5"
+                }
+              `}
+              title={isListening ? "Listening..." : "Voice Input"}
+            >
+              {isListening ? <MicOff size={14} /> : <Mic size={14} />}
+            </button>
           </div>
 
           {/* Right — send / stop */}
           <button
             onClick={handleSend}
             disabled={!isLoading && !value.trim()}
-            className={`flex items-center justify-center w-8 h-8 rounded-lg border-none cursor-pointer transition-all duration-150
+            className={`flex items-center justify-center w-8 h-8 rounded-lg border transition-all duration-200 focus-visible:ring-1 focus-visible:ring-cyber-glow focus-visible:outline-none
               ${isLoading
-                ? "bg-white text-[#0d0f14] hover:bg-slate-200"
+                ? "bg-white border-transparent text-[#06070a] hover:bg-slate-200"
                 : value.trim()
-                ? "bg-gradient-to-br from-indigo-500 to-violet-700 hover:opacity-90 text-white"
-                : "bg-white/[0.05] text-slate-600 cursor-not-allowed"
+                ? "bg-cyber-accent border-cyber-accent/30 text-white hover:bg-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.25)] cursor-pointer"
+                : "bg-white/[0.01] border-white/5 text-slate-700 opacity-40 cursor-not-allowed"
               }`}
+            title="Send Message"
           >
-            {isLoading ? <Square size={12} fill="currentColor" /> : <Send size={14} />}
+            {isLoading ? <Square size={10} fill="currentColor" className="border-none" /> : <Send size={13} />}
           </button>
 
         </div>
       </div>
 
-      <p className="text-center text-[10.5px] text-slate-700 mt-2.5">
+      <p className="text-center text-[10px] font-medium text-slate-700 mt-2.5">
         SyncAgents can make mistakes. Verify important info.
       </p>
     </div>

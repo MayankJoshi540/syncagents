@@ -25,16 +25,16 @@ const markdown = (content || "")
   .replace(/```text/gi, "```")
   .replace(/```[a-zA-Z0-9_-]+\s+id="[^"]*"/g, "```");
   return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"}`}>
+    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-3`}>
       <div
         className={`w-fit max-w-[92vw] md:max-w-[72%]
-  px-4 py-2.5 rounded-2xl
+  px-4.5 py-3 rounded-2xl
   break-words overflow-hidden
-  leading-relaxed
+  leading-relaxed border font-medium text-[13.5px]
         ${
           isUser
-            ? "bg-gradient-to-br from-indigo-500 to-violet-700 text-white rounded-tr-sm"
-            : " text-slate-200 rounded-tl-sm"
+            ? "bg-gradient-to-br from-indigo-600/90 to-violet-800/90 border-indigo-500/30 text-white rounded-tr-sm shadow-[0_0_15px_rgba(99,102,241,0.15)]"
+            : "bg-[#0d1017]/70 border-white/5 text-slate-200 rounded-tl-sm shadow-[0_4px_24px_rgba(0,0,0,0.15)]"
         }`}
       >
         {images.length > 0 && (
@@ -138,7 +138,7 @@ const markdown = (content || "")
 
       if (!className) {
         return (
-          <code className="px-1.5 py-0.5 rounded bg-white/10 text-pink-400">
+          <code className="px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 font-mono text-[12px]">
             {value}
           </code>
         );
