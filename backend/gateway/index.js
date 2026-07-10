@@ -6,8 +6,8 @@ import morgan from "morgan";
 import dotenv from "dotenv";
 import proxy from "express-http-proxy";
 import { proxyWithUser } from "./utils/proxyWithHeaders.js";
-import { protect } from "./middlewares/auth.middleware.js";
-import { getCurrentUser } from "./controllers/user.controller.js";
+import { protect } from "./middleware/auth.middleware.js";
+import { getCurrentUser } from "./controller/user.controller.js";
 import cookieParser from "cookie-parser"
 dotenv.config();
 const app = express();
