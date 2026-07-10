@@ -1,121 +1,37 @@
-export const proxyWithUser = (targetUrl) => {
-    return async (req, res, next) => {
-        try {
-            const headers = new Headers();
-            Object.entries(req.headers).forEach(([key, val]) => {
-                const lowKey = key.toLowerCase();
-                if (lowKey !== 'host' && lowKey !== 'expect') {
-                    if (Array.isArray(val)) {
-                        val.forEach(v => headers.append(key, v));
-                    } else if (val !== undefined) {
-                        headers.append(key, val);
-                    }
-                }
-            });
+import proxy from "express-http-proxy";
 
-            if (req.user) {
-                headers.set("x-user-id", req.user.userID || req.user.userId || req.user._id);
-                headers.set("x-user-email", req.user.email);
-                headers.set("x-user-avatar", req.user.avatar);
-            }
+export const proxyWithUser =
+(serviceUrl)=>{
 
-            const options = {
-                method: req.method,
-                headers: headers,
-                duplex: 'half'
-            };
+ return proxy(
+  serviceUrl,
+  {
 
-            if (req.method !== 'GET' && req.method !== 'HEAD') {
-                options.body = req;
-            }
+   proxyReqOptDecorator:
+   (proxyReqOpts, srcReq)=>{
 
-            const response = await fetch(`${targetUrl}${req.url}`, options);
+     if(srcReq.user){
 
-            const excludeHeaders = [
-                'connection',
-                'keep-alive',
-                'transfer-encoding',
-                'content-encoding',
-                'content-length',
-                'access-control-allow-origin',
-                'access-control-allow-credentials',
-                'access-control-allow-headers',
-                'access-control-allow-methods',
-                'access-control-expose-headers'
-            ];
+      const userId = srcReq.user.userId || srcReq.user.userID;
+      if (userId) {
+        proxyReqOpts.headers["x-user-id"] = String(userId);
+      }
 
-            res.status(response.status);
-            response.headers.forEach((val, key) => {
-                if (!excludeHeaders.includes(key.toLowerCase())) {
-                    res.setHeader(key, val);
-                }
-            });
+      if (srcReq.user.email) {
+        proxyReqOpts.headers["x-user-email"] = String(srcReq.user.email);
+      }
 
-            const arrayBuffer = await response.arrayBuffer();
-            res.send(Buffer.from(arrayBuffer));
-        } catch (err) {
-            console.error("Proxy Error:", err);
-            if (!res.headersSent) {
-                res.status(500).json({ message: "Proxy error", error: err.message });
-            }
-        }
-    };
-};
+      if (srcReq.user.avatar) {
+        proxyReqOpts.headers["x-user-avatar"] = String(srcReq.user.avatar);
+      }
 
-export const customProxy = (targetUrl) => {
-    return async (req, res, next) => {
-        try {
-            const headers = new Headers();
-            Object.entries(req.headers).forEach(([key, val]) => {
-                const lowKey = key.toLowerCase();
-                if (lowKey !== 'host' && lowKey !== 'expect') {
-                    if (Array.isArray(val)) {
-                        val.forEach(v => headers.append(key, v));
-                    } else if (val !== undefined) {
-                        headers.append(key, val);
-                    }
-                }
-            });
+     }
 
-            const options = {
-                method: req.method,
-                headers: headers,
-                duplex: 'half'
-            };
+    return proxyReqOpts;
 
-            if (req.method !== 'GET' && req.method !== 'HEAD') {
-                options.body = req;
-            }
+   }
 
-            const response = await fetch(`${targetUrl}${req.url}`, options);
+  }
+ );
 
-            const excludeHeaders = [
-                'connection',
-                'keep-alive',
-                'transfer-encoding',
-                'content-encoding',
-                'content-length',
-                'access-control-allow-origin',
-                'access-control-allow-credentials',
-                'access-control-allow-headers',
-                'access-control-allow-methods',
-                'access-control-expose-headers'
-            ];
-
-            res.status(response.status);
-            response.headers.forEach((val, key) => {
-                if (!excludeHeaders.includes(key.toLowerCase())) {
-                    res.setHeader(key, val);
-                }
-            });
-
-            const arrayBuffer = await response.arrayBuffer();
-            res.send(Buffer.from(arrayBuffer));
-        } catch (err) {
-            console.error("Proxy Error:", err);
-            if (!res.headersSent) {
-                res.status(500).json({ message: "Proxy error", error: err.message });
-            }
-        }
-    };
-};
+}
